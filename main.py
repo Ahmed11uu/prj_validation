@@ -1,5 +1,5 @@
 # ----------------------------Import class--------------------------------------------------
-from AliceetBob0 import AliceetBob
+from AliceEtBob import AliceetBob
 from BFS import bfs_search
 from DictRootedGraph import DictRootedGraph
 from HanoiConfig import isFinal
@@ -9,7 +9,7 @@ from ParentTracer import ParentTraceur
 from Semantics2RG import Semantics2RG
 
 # -----------------------------Test Du Class DictRootedGraaph-----------------------------
-print("******************************************* Test le class DictRootedGraph *******************************************")
+print("******************************************* Test le class DictRootedGraph ******************************************* ")
 g = DictRootedGraph()
 g.add_new_one(1, 2)
 g.add_new_one(1, 3)

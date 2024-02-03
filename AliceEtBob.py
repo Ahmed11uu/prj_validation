@@ -1,51 +1,67 @@
-from BFS import bfs_search
-from ParentTracer import ParentTraceur
-from Semantics import SemanticRelation
-from Semantics2RG import Semantics2RG
+import random
+from Semantic import Semantic
 
 
-class AliceetBob(SemanticRelation):
+class AliceAndBob0(Semantic):
+
     def __init__(self):
-        # Call the __init__ method of the base class
-        super().__init__()
+        self.sA=0   #sA représente l'état actuel de Alice: 0:initial 1:attente 2:critique
+        self.sB=0
 
     def initial(self):
-        return [("Home_Alice", "Home_Bob")]
+        return [("initialAlice", "initialBob")]
 
-    def actions(self, conf):
-        actions = []
+    def actions(self, config):
+        a=[]
+        print("start ")
+        print(config)
+        # if random.random() < 0.5: #alice moves
+        #     # print("moma ")
+        #     # print(type(config))
+        #     al,b=config
+        #     print("alice moves")
+        #     if al == "initialAlice":
+        #         a.append(lambda x: [("attendAlice",b)])
+        #     elif al == "attendAlice":
+        #         a.append(lambda x: [("EnSectionCritiqueAlice",b)])
+        #     elif al == "EnSectionCritiqueAlice":
+        #         a.append(lambda x: [("initialAlice",b)])
+        # else:#bob moves
+        #     al,b=config
+        #     print("bob moves")
+        #     if b == "initialBob":
+        #         a.append(lambda x: [(al,"attendBob")])
+        #     elif b == "attendBob":
+        #         a.append(lambda x: [(al,"EnSectionCritiqueBob")])
+        #     elif b == "EnSectionCritiqueBob":
+        #         a.append(lambda x: [(al,"initialBob")])
+        # print("end ")
 
-        confAlice, confBob = conf
 
-        if confAlice == "Home_Alice":
-            actions.append(lambda x: [("Wait_Alice", confBob)])
-        if confAlice == "Wait_Alice":
-            actions.append(lambda x: [("SC_Alice", confBob)])
-        if confAlice == "SC_Alice":
-            actions.append(lambda x: [("Home_Alice", confBob)])
-        if confBob == "Home_Bob":
-            actions.append(lambda x: [(confAlice, "Wait_Bob")])
-        if confBob == "Wait_Bob":
-            actions.append(lambda x: [(confAlice, "SC_Bob")])
-        if confBob == "SC_Bob":
-            actions.append(lambda x: [(confAlice, "Home_Bob")])
-        return actions
+        #test 2
 
-    def execute(self, action, conf):
-        return action(conf)
+        
+        al,b=config
+        # print("alice moves")
+        if al == "initialAlice":
+            a.append(lambda x: [("attendAlice",b)])
+        elif al == "attendAlice":
+            a.append(lambda x: [("EnSectionCritiqueAlice",b)])
+        elif al == "EnSectionCritiqueAlice":
+            a.append(lambda x: [("initialAlice",b)])
+    
+        # print("bob moves")
+        if b == "initialBob":
+            a.append(lambda x: [(al,"attendBob")])
+        elif b == "attendBob":
+            a.append(lambda x: [(al,"EnSectionCritiqueBob")])
+        elif b == "EnSectionCritiqueBob":
+            a.append(lambda x: [(al,"initialBob")])
+        print("end ")
 
+        return a
 
-if __name__ == "__main__":
-    AliceBob = AliceetBob()
-    semantics2RG = Semantics2RG(AliceBob)
-    # print("-------------------------------")
-    # print(semantics2RG.getRoots())
-    # print("-------------------------------")
-    # print(semantics2RG.getNeighbors("Home_Alice"))
-    pr = ParentTraceur(semantics2RG)
-    t, k = bfs_search(pr, lambda x: x[0] == "SC_Alice" and x[1] == "SC_Bob")
-
-    print(t, k)
-    trace = pr.get_trace(t)
-    print(trace)
-    print("//////////////////////////////////////////////////////////////////////////////////////////////////")
+    def execute(self, action, config):
+        return action(config)
+    
+    

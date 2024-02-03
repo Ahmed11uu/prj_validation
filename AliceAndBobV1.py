@@ -1,63 +1,71 @@
-# AliceAndBob.py
+import random
+from Semantic import Semantic
 
-# Import necessary modules
-from BFS import bfs_search
-from ParentTracer import ParentTraceur
-from Semantics import SemanticRelation
-from Semantics2RG import Semantics2RG
 
-# Define the AliceetBobV1 class, inheriting from SemanticRelation
-class AliceetBobV1(SemanticRelation):
+class AliceAndBobV1(Semantic):
+
     def __init__(self):
-        super().__init__()
-        self.flagAlice = 0
-        self.flagBob = 0
+        self.fA=0   #flag
+        self.fB=0
 
     def initial(self):
-        # Define the initial configuration for Alice and Bob
-        return [("Home_Alice", "Home_Bob")]
+        return [("initialAlice", "initialBob")]
 
-    def actions(self, conf):
-        actions = []
-        confAlice, confBob = conf
+    def actions(self, config):
+        a=[]
+        print("start ")
+        print(config)
+        # if random.random() < 0.5: #alice moves
+        #     # print("moma ")
+        #     # print(type(config))
+        #     al,b=config
+        #     print("alice moves")
+        #     if al == "initialAlice":
+        #         a.append(lambda x: [("attendAlice",b)])
+        #     elif al == "attendAlice":
+        #         a.append(lambda x: [("EnSectionCritiqueAlice",b)])
+        #     elif al == "EnSectionCritiqueAlice":
+        #         a.append(lambda x: [("initialAlice",b)])
+        # else:#bob moves
+        #     al,b=config
+        #     print("bob moves")
+        #     if b == "initialBob":
+        #         a.append(lambda x: [(al,"attendBob")])
+        #     elif b == "attendBob":
+        #         a.append(lambda x: [(al,"EnSectionCritiqueBob")])
+        #     elif b == "EnSectionCritiqueBob":
+        #         a.append(lambda x: [(al,"initialBob")])
+        # print("end ")
 
-        # Alice's actions
-        if confAlice == "Home_Alice":
-            actions.append(lambda state: [("Wait_Alice", state[1])])
-        elif confAlice == "Wait_Alice" and confBob != "SC_Bob":
-            actions.append(lambda state: [("SC_Alice", state[1])])
-        elif confAlice == "SC_Alice":
-            actions.append(lambda state: [("Home_Alice", state[1])])
 
-        # Bob's actions
-        if confBob == "Home_Bob":
-            actions.append(lambda state: [(state[0], "Wait_Bob")])
-        elif confBob == "Wait_Bob" and confAlice != "SC_Alice":
-            actions.append(lambda state: [(state[0], "SC_Bob")])
-        elif confBob == "Wait_Bob":
-            actions.append(lambda state: [(state[0], "Home_Bob")])
+        #test 2
 
-        print(f"Conf: {conf}")
-        return actions
+        
+        al,b=config
+        # print("alice moves")
+        if al == "initialAlice":
+            a.append(lambda x: [("attendAlice",b)])
+            self.fA=1
+        elif al == "attendAlice" and self.fB==0:
+            a.append(lambda x: [("EnSectionCritiqueAlice",b)])
+        elif al == "EnSectionCritiqueAlice":
+            a.append(lambda x: [("initialAlice",b)])
+            self.fA=0
+    
+        # print("bob moves")
+        if b == "initialBob":
+            a.append(lambda x: [(al,"attendBob")])
+            self.fB=1
+        elif b == "attendBob" and self.fA==0:
+            a.append(lambda x: [(al,"EnSectionCritiqueBob")])
+        elif b == "EnSectionCritiqueBob":
+            a.append(lambda x: [(al,"initialBob")])
+            self.fB=0
+        print("end ")
 
-    def execute(self, action, conf):
-        # Execute the given action on the current configuration
-        return action(conf)
+        return a
 
-# Entry point for the script
-if __name__ == '__main__':
-    # Instantiate the AliceetBobV1 coordinator
-    coordinator = AliceetBobV1()
-
-    # Create a rooted graph using Semantics2RG
-    rg = Semantics2RG(coordinator)
-
-    # Create a ParentTraceur for tracing parents in the graph
-    traceur = ParentTraceur(rg)
-
-    # Run BFS search to find a specific state
-    w, k = bfs_search(traceur, lambda x: x[0] == "SC_Alice" and x[1] == "SC_Bob")
-
-    # Get the trace of the found state
-    trace = traceur.get_trace(w)
-    print(trace)
+    def execute(self, action, config):
+        return action(config)
+    
+    

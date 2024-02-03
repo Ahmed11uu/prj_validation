@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from Semantics import SemanticRelation
+from Semantic import SemanticRelation
 
 class SoupConfiguration(ABC):
     """

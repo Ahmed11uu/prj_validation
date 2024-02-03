@@ -1,7 +1,8 @@
 from IRootedGraph import abstractmethod
+from abc import ABC, abstractmethod
 
 
-class Semantic():
+class SemanticRelation(ABC):
     @abstractmethod
     def __init__(self):
         pass
@@ -11,11 +12,9 @@ class Semantic():
         pass
 
     @abstractmethod
-    def actions(self, config):
+    def actions(self,src):
         pass
 
     @abstractmethod
-    def execute(self,action, config):
+    def execute(self,actions,src):
         pass
-    
-    
